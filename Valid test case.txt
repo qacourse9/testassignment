@@ -1,0 +1,64 @@
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class LoginTests {
+    private WebDriver driver;
+
+    @Before
+    public void setUp() {
+        // Set up the driver
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+    }
+
+    @Test
+    public void testSuccessfulLogin() {
+        // Navigate to the login page
+        driver.get("https://www.saucedemo.com/");
+        
+        // Enter valid credentials
+        WebElement usernameInput = driver.findElement(By.id("username"));
+        WebElement passwordInput = driver.findElement(By.id("password"));
+        WebElement loginButton = driver.findElement(By.id("login-button"));
+        
+        usernameInput.sendKeys("standard_user");
+        passwordInput.sendKeys("secret_sauce");
+        loginButton.click();
+        
+        // Verify successful login
+        WebElement productsTitle = driver.findElement(By.className("product_label"));
+        Assert.assertTrue(productsTitle.isDisplayed());
+    }
+
+    @Test
+    public void testInvalidLogin() {
+        // Navigate to the login page
+        driver.get("https://www.saucedemo.com/");
+        
+        // Enter invalid credentials
+        WebElement usernameInput = driver.findElement(By.id("username"));
+        WebElement passwordInput = driver.findElement(By.id("password"));
+        WebElement loginButton = driver.findElement(By.id("login-button"));
+        
+        usernameInput.sendKeys("standard_user");
+        passwordInput.sendKeys("secret_sauce1");
+        loginButton.click();
+        
+        // Verify error message
+        WebElement errorMessage = driver.findElement(By.cssSelector("[data-test='error']"));
+        Assert.assertTrue(errorMessage.isDisplayed());
+    }
+
+    @After
+    public void tearDown() {
+        // Close the browser
+        driver.quit();
+    }
+}
